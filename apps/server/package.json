@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon index.ts"
+    "dev": "nodemon --max-old-space-size=2048 --exec  babel-node index.js -e js"
   },
   "keywords": [],
   "author": "",
