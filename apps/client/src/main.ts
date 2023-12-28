@@ -1,4 +1,5 @@
 import { io } from "socket.io-client";
+import { handleMouseDown, handleMouseMove, handleMouseUp } from "./draggableProperties";
 
 const socket = io("http://localhost:5000");
 
@@ -10,6 +11,7 @@ let isAlreadyCalling = false;
 let getCalled = false;
 
 const remoteVideo = document.getElementById("remote-video") as HTMLVideoElement;
+const localVideo = document.getElementById("local-video") as HTMLVideoElement;
 
 function initSocketConnection() {
   socket.on("update-user-list", ({ users }) => {
@@ -25,9 +27,9 @@ function initSocketConnection() {
   });
 
   socket.on("call-made", async data => {
+    console.log(data)
     if (getCalled) {
       const confirmed = confirm(`User "Socket: ${data.socket}" wants to call you. Do accept this call?`);
-
       if (!confirmed) {
         socket.emit("reject-call", { from: data.socket });
         return;
@@ -66,10 +68,10 @@ function initPeerConnection() {
 }
 
 function initLocalVideo() {
-  const localVideo = document.getElementById("local-video") as HTMLVideoElement;
+
 
   if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-    navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+    navigator.mediaDevices.getUserMedia({ video: true, audio: false })
       .then((stream) => {
         if (localVideo) {
           localVideo.srcObject = stream;
@@ -134,6 +136,12 @@ function updateUserList(socketIds: string[]) {
 }
 
 
+localVideo.addEventListener('mousedown', handleMouseDown);
+document.addEventListener('mousemove', handleMouseMove);
+document.addEventListener('mouseup', handleMouseUp);
+localVideo.addEventListener('touchstart', handleMouseDown);
+document.addEventListener('touchmove', handleMouseMove);
+document.addEventListener('touchend', handleMouseUp);
 initSocketConnection();
 initPeerConnection();
 initLocalVideo();
