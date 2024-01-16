@@ -1,7 +1,7 @@
 import { io } from "socket.io-client";
 import { handleMouseDown, handleMouseMove, handleMouseUp } from "./draggableProperties";
 
-const socket = io("http://localhost:5000");
+const socket = io("https://web-rtc-client-jsgh.vercel.app/");
 
 const { RTCPeerConnection, RTCSessionDescription } = window;
 
